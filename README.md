@@ -1,5 +1,8 @@
 # DynamicHP-WIP- *PLEASE TEST OUT AND LET ME KNOW*
 
+## Requires
+
+[DataManager (by urm)](https://github.com/tes3mp-scripts/DataManager)
 
 ## Description
 
@@ -15,6 +18,7 @@ There are included debug messages as I'd love somebody to try it out first and l
 2. Configurable variable that could scale/rise the starting health of an actor.
 
 
+Thanks to David C. for explanations on this topic.
 
 
 
