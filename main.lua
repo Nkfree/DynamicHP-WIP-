@@ -29,36 +29,19 @@ end
 
 
 
-DynamicHP.OnPlayerCellChangeHandler = function(eventStatus, pid)
+DynamicHP.OnPlayerCellChange = function(eventStatus, pid)
 
 if Players[pid] ~= nil and Players[pid]:IsLoggedIn() then
 	local cellDescription = Players[pid].data.location.cell
-	local name = Players[pid].name
-	local previousCell
 	
 	if LoadedCells[cellDescription] ~= nil then
 		LoadedCells[cellDescription]:SaveActorStatsDynamic()
-	
-		previousCell = Players[pid].data.customVariables.previousCell 
-		
-		if previousCell then
-			for _, uniqueIndex in pairs(LoadedCells[previousCell].data.packets.actorList) do
-				DynamicHP.ActuallyChangeHealth(previousCell, uniqueIndex)
-			end
-		end
 		
 		for _, uniqueIndex in pairs(LoadedCells[cellDescription].data.packets.actorList) do
 			DynamicHP.ActuallyChangeHealth(cellDescription, uniqueIndex)
 		end
 		
-		if previousCell then
-			DynamicHP.LoadActorStatsDynamic(previousCell)
-		else
-			DynamicHP.LoadActorStatsDynamic(cellDescription)
-		end
-		
-		Players[pid].data.customVariables.previousCell = cellDescription
-		Players[pid]:QuicksaveToDrive()
+		DynamicHP.LoadActorStatsDynamic(cellDescription)
 	end
 end	
 
@@ -85,7 +68,7 @@ end
 
 DynamicHP.OnCellUnload = function(eventStatus, pid, cellDescription)
 
-if cellDescription ~= nil and cellDescription ~= "" and LoadedCells[cellDescription] ~= nil then
+if LoadedCells[cellDescription] ~= nil then
 	
 	for _, uniqueIndex in pairs(LoadedCells[cellDescription].data.packets.actorList) do
 		DynamicHP.ActuallyChangeHealth(cellDescription, uniqueIndex)
@@ -144,14 +127,14 @@ if LoadedCells[cellDescription].data.objectData[uniqueIndex].stats ~= nil then
 	if DynamicHP.CreateValidateDataEntry(cellDescription, uniqueIndex) then
 		local modifier = baseHP / DynamicHP.data.Actors[refId]
 		DynamicHP.DoLog("modifier: " .. modifier .. " and visitorsCount: " .. visitorsCount)
-		if modifier ~= visitorsCount then
+		if modifier ~= visitorsCount and currentHP ~= 0 then
 			LoadedCells[cellDescription].data.objectData[uniqueIndex].stats.healthBase = baseHP / modifier * visitorsCount
 			LoadedCells[cellDescription].data.objectData[uniqueIndex].stats.healthCurrent = currentHP / modifier * visitorsCount
 			DynamicHP.DoLog("Change hp for uniqueIndex: " .. uniqueIndex .. " refId: " .. refId .. " " .. currentHP .. "/" .. baseHP .. " to " .. LoadedCells[cellDescription].data.objectData[uniqueIndex].stats.healthCurrent .. "/" .. LoadedCells[cellDescription].data.objectData[uniqueIndex].stats.healthBase)
 		end
 	
 	else
-		DynamicHP.DoLog("Unable to change HP for " .. uniqueIndex)
+		DynamicHP.DoLog("Unable to change HP for " .. uniqueIndex .. "; currentHealth: " .. currentHP)
 	end
 	DynamicHP.DoLog("-------------------")
 end
@@ -175,7 +158,7 @@ end
 
 
 
-customEventHooks.registerHandler("OnPlayerCellChange", DynamicHP.OnPlayerCellChangeHandler)
+customEventHooks.registerHandler("OnPlayerCellChange", DynamicHP.OnPlayerCellChange)
 customEventHooks.registerHandler("OnActorCellChange", DynamicHP.OnActorCellChange)
 customEventHooks.registerHandler("OnCellUnload", DynamicHP.OnCellUnload)
 
@@ -183,5 +166,3 @@ customEventHooks.registerHandler("OnCellUnload", DynamicHP.OnCellUnload)
 
 
 return DynamicHP
-
-
