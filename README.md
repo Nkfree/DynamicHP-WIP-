@@ -20,8 +20,7 @@ There are included debug messages as I'd love somebody to try it out first and l
 
 ## To do
 
-1. Exception for actor that is already killed.
-2. Configurable variable that could scale/rise the starting health of an actor.
+1. Configurable variable that could scale/rise the starting health of an actor.
 
 
 Thanks to David C. for explanations on this topic.
