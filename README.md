@@ -4,6 +4,12 @@
 
 [DataManager (by urm)](https://github.com/tes3mp-scripts/DataManager)
 
+## Installation
+
+1. Install *DataManager* (has to be installed and put into customScripts first)
+2. Download the ```main.lua``` and put it in */server/scripts/custom/DynamicHP*
+3. Open ```customScripts.lua``` and add this code on separate line: ```DynamicHP = require "custom/DynamicHP/main"```
+
 ## Description
 
 Dynamic scaling of actors hp based on amount of visitors in certain cell.
